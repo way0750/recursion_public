@@ -19,3 +19,16 @@ document.body instanceof Node // returns true
    getAttributeNode('attr name') also returns a string of attr value;
    must use on a specific node
    document.body.childNodes[7].childNodes[1].getAttributeNode('class');
+
+
+
+
+  base case: none of the childNode has anymore child
+  what to return: an array of nodes that have certain class attribute
+  how to break: whenever a node has child, pass this node to recusive call
+
+  what to do about the return: concate current array of any existing nodes with certain class attribute
+
+
+  by default always search all nodes staring from the document object
+  

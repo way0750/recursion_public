@@ -1,0 +1,72 @@
+parseJSON the plan
+
+	should prabably trim off all the \s everything use this, to make thing easier
+
+
+	it can parse simple object and array
+		if the string, after trimming of the space characters in front and back,  starts with { and end with } then simple object
+		if [ and ] then array
+
+		each property or index might have more objects or arrays
+
+		if obj, then find property name and value
+		if array then find each indexed item
+
+	it can parse all primitive values
+		if the string isn't simple object or array then see if it can be parse as primitive value
+		primitive: 
+			numbers(interger, float, Infinity, NaN)
+			string
+				the actual string content has to double quoted!
+				'      "  hey how's going?  "      '
+				should return: "  hey how's going?  "
+			boolean
+			null
+
+
+first trim
+	also all value can be either ' value ' or " value "
+		no '' are allowed inside of the string
+		which means that inner strings have to be " " double quoted
+			if inner '' found throw error
+			(/\'/).test(str) throw error;
+			use trim() to trim;
+
+them check the content obj/arr or primitive?
+	(/^[\[\{]/).test(str);
+
+if obj then find key and value
+
+
+if array then find each value
+
+parse each item / property
+	
+
+
+	Number()
+	if str === 'null' then null(this is has too be before Boolean test)
+	if Boolean(str) === true or false then true false
+	if str[0] and str[str.length-1]  are both \" then it is a string
+		and simple str.slice(1, str.length);
+
+
+
+parsing array:
+
+	trim off the first bracket then go through each character one by one
+	if runs into a [ then increse bracker count by 1
+	if tuns into a ] then decrese bracker count by 1
+
+	have a temp hold or something to hold on to characters
+	 start to hold from begin/after a comma
+	 end at comma or at the end of string
+
+	 then trim space front and end
+
+
+	when ended, then convert by calling parseJSON again to convert each item
+
+	return item then enter an [arr] and return it;
+
+
