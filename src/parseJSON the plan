@@ -56,7 +56,7 @@ parsing object:
 	//it must be an object
 	comma means one set of k-v
 	: sets apart k-v
-	
+
 
 	}
 
@@ -77,6 +77,94 @@ parsing array:
 	when ended, then convert by calling parseJSON again to convert each item
 
 	return item then enter an [arr] and return it;
+
+
+
+
+
+
+when comes to string parsing
+
+\n as one character(but special one but still)
+\n to stringify it add one more \ === \\n
+
+when escaping one character for JSON stringifying it
+	add \ to it
+
+\" or " both are the same anyway since \" has no special function
+to escape it and one \ like above:  \\" 
+
+
+
+
+or double quote within double quote has to be escaped
+
+" " " when stringified // " \\" "
+
+
+normally escaped: " \" " must do this to keep the middle "
+
+but JSON will "\\"" it is the same as "\""
+because after evaluation "\\"" evaluate to "\""
+the first \ escaped the second \ 's function(aka in this case kept the \ as it is ) so the whole thing evaluate to "\""
+
+
+
+
+so to parse:
+	first find all the \s if doouble the amount then divide by 2
+	you will get the actual amount to keep
+
+	\\character === \character
+
+
+
+'["\\\\\\"\\"a\\""]'
+
+same as ["\\\\\\"\\"a\\""]
+then there is only one element which is "\\\\\\"\\"a\\""
+then \\1 \\1 \\"1" \\"1"a \\"1"
+you should get evaluate to \\""a"
+which actaully is 
+
+easy: each level, one \ escape one character after it
+
+
+double escaping things
+	\\n means to escape to single character: \n
+	\\" measn to escape to single character: "
+
+	if special letter then escape to \letter
+	if not special letter than escape to letter 
+
+
+
+now just need to find a way to parse string
+
+
+maybe should treat string the similar way treaing array and object
+using " " as a way to detech data type
+	only this is a valid json string value: ' " content " '
+	after stripping off space characters from front and end
+	check and see if it is still valid
+		invalid means have unescape "s in the middle and the very end
+		/.*[^\\]["]|\\$/.test(str) if return true then invalid
+
+		AFTER stripping off the space  and the enclosing "s
+		return if empty string
+
+		it's invalid if any " without \\
+		or \\ at the end
+
+		/.*[^\\]["]|\\$/
+
+		or maybe
+
+		/.*\\[^\"bfnrt]/ and/or /\\"$/ and/or /.*[^\\]"/
+
+		/.*\\[^\"bfnrt]|\\$|.*[^\\]*"/.test()
+		use this without the " " first
+		then if anything returns true, it's invalid
 
 
 
