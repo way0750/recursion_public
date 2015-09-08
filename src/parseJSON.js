@@ -31,15 +31,16 @@ var convertToArray = function(json, convertItem){
 		}
 		//if all possible brackets are accounted for and looping hits a comma or the end of the json string
 		//then we have a complete value
-		//but of curse we need to convert that value by parseJSON too beforing pushing in the final array
+		//then convert that value by parseJSON beforing pushing in the final array
 		if (bracketQ.length===0 && curChar === ',' || i === length-1){
-			//since we can reuse convertToArray for converting objects too
-			//but we should not convert the part of stirng we have since it is a key value pair
+			//can reuse convertToArray for converting objects too
+			//but don't convert the stirng since it is a key value pair
+			//instead use convertToObject to find key-value in each sting
 			if (i === length-1) {curValue += (curChar);}
 			arr.push(convertItem ? parseJSON(curValue) : curValue);
 			curValue = '';
 		} else {
-		//if we don't have complete value yet, then keep adding characters to the temporary character
+		//if no complete value yet, keep adding characters to the temporary
 		//holding string until a complete value is found.
 			curValue += (curChar);
 		}
@@ -49,12 +50,11 @@ var convertToArray = function(json, convertItem){
 
 
 var isValidString = function(json){
-	//string must be contained in '"content"' format
+	//string must be contained in '"abc"' format
 	var validContainer = /^"[^]*"$/.test(json);
 	//string content can not have the following: '"content\\"'(escaping the last "),
-	//nor: '"\\"' having \\ without special characters of "bfnrt\\
-	//nor: 
-	var validContent =  /.*\\[^"bfnrt\\]|\\$|\\"$/.test(json) === false;
+	//nor: '"\\"' having \\ without special characters of ", bfnrt, or \\
+	var validContent =  /.*\\[^"bfnrt\\]|\\"$/.test(json) === false;
 	return validContent && validContainer;
 };
 
@@ -72,6 +72,8 @@ var convertToObject = function(json){
 };
 
 var stringEsc = function(str) {
+	//replace each potential escape sequence, ex: \\n, to actual escape 
+	//by String.fromCharCode();
 	return str.slice(1, str.length-1).replace(/\\([bfnrt"\\])/g, function(wholeMatch, specialChar){
 		if (specialChar === 'b'){
 			return String.fromCharCode(8);
