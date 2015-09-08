@@ -167,6 +167,33 @@ using " " as a way to detech data type
 		then if anything returns true, it's invalid
 
 
+		to escape:
+		run replace 
+		\\ is the escape sequence
+		if \\bfnrt\\ turn it into \bfnrt\
+		if \\" becomes "
+		put them into a '' as final result
+		find \\n then replace it with an actual escape sequence
+
+		JSON.parse('"\\n\\\\\\""') === '\n\\\"'
+		true;
+		\n \\ \" are actual functioning escape sequence not cosmetic
+
+
+		if found \\ then replace with String.fromCharCode(92);
+		if \\b then 8
+		if \\t then 9
+		if \\n then 10
+		if \\f then 12
+		if \\r then 13
+		if \\" then 34
+
+
+var stringEsc = function(str) {
+	return str.slice(1, str.length-1).replace(/\\([bfnrt"\\])/g, function(wholeMatch, specialChar){
+		
+	});
+};
 
 
 

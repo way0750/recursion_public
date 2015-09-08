@@ -54,11 +54,11 @@ parseableStrings = [
   '[{"a":"b"}, {"c":"d"}]',
   '{"a":[],"c": {}, "b": true}',
   '[[[["foo"]]]]',
-/*
+
   // escaping
   '["\\\\\\"\\"a\\""]',
   '["and you can\'t escape thi\s"]',
-*/
+
   // everything all at once
   '{"CoreletAPIVersion":2,"CoreletType":"standalone",' +
     '"documentation":"A corelet that provides the capability to upload' +

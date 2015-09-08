@@ -47,24 +47,23 @@ var convertToArray = function(json, convertItem){
 	return arr;
 };
 
-//trim both end
-//then replace all \n\r\t if not in between two " "
-//yeah but what if there are some random but escapd " "
-//all over the place
-//but the all the " within a string are escaped
-//
+
 var isValidString = function(json){
-	//var validContainer = json[0] === json[json.length-1] === '"';
-	var validContent =  /.*\\[^\"bfnrt]|\\$|.*[^\\]*"/.test(json.slice(1, json.length-1)) === false;
-	return validContent;
+	//string must be contained in '"content"' format
+	var validContainer = /^"[^]*"$/.test(json);
+	//string content can not have the following: '"content\\"'(escaping the last "),
+	//nor: '"\\"' having \\ without special characters of "bfnrt\\
+	//nor: 
+	var validContent =  /.*\\[^"bfnrt\\]|\\$|\\"$/.test(json) === false;
+	return validContent && validContainer;
 };
 
 
 var convertToObject = function(json){
-	//we can simply use convertToArray extract key value pair;
+	//we can simply use convertToArray to extract key value pair;
 	var keyValuePairs = convertToArray(json, false), obj = {}, key, value;
 	keyValuePairs.forEach(function(pair){
-		pair = pair.match(/([^]*?):([^]*)/); //match(/^([^:]+):/)
+		pair = pair.match(/([^]*?):([^]*)/);
 		key = parseJSON(pair[1]);
 		value = parseJSON(pair[2]);
 		obj[key] = value;
@@ -72,11 +71,32 @@ var convertToObject = function(json){
 	return obj;
 };
 
+var stringEsc = function(str) {
+	return str.slice(1, str.length-1).replace(/\\([bfnrt"\\])/g, function(wholeMatch, specialChar){
+		if (specialChar === 'b'){
+			return String.fromCharCode(8);
+		} else 	if (specialChar === 't'){
+			return String.fromCharCode(9);
+		} else 	if (specialChar === 'n'){
+			return String.fromCharCode(10);
+		} else  if (specialChar === 'f'){
+			return String.fromCharCode(12);
+		} else 	if (specialChar === 'r'){
+			return String.fromCharCode(13);
+		} else 	if (specialChar === '"'){
+			return String.fromCharCode(34);
+		} else 	if (specialChar === '\\'){
+			return String.fromCharCode(92);
+		} 
+	});
+};
+
+
 
 var parseJSON = function(json) {
   //first alway trim() away unesassary sapce characters front and back
   json = json.trim();
-  // /(^\{[^]*\}$/
+
   if ( /^\{[^]*\}$/.test(json)){
   	//if true then it is an object
   	return convertToObject(json);
@@ -85,24 +105,21 @@ var parseJSON = function(json) {
   	//if true then it's an array
   	return convertToArray(json);
 
-  } else if (json === 'null'){
-  	//null test
-  	return null;
+  } else if (/^true$|^false$|^null$/.test(json)){
+  	//boolean and null test
+    return json === 'null' ? null : json === "true";
 
-  } else if (/^true$|^false$/.test(json)){
-  	//boolean test
-    return json === "true";
-
-  } else if (/NaN|-?Infinity/.test(Number(json)) !== true && json.length){
+  } else if (isFinite(json) && !isNaN(json) && json.length){
+  	//only non-empty string with numeric literials but not NaN or +/-Infinity are valid
     return Number(json);
 
   } else if (isValidString(json)){
   	//string test
-  	return json.slice(1, json.length-1);
+  	return stringEsc(json);
 
   } else {
   	//if nothing is matched, then throw error
-    throw (new SyntaxError('SyntaxError'));
+    throw (new SyntaxError('the end of the world is near'));
   }
 
 };
