@@ -1,0 +1,21 @@
+traversing-dom
+
+to get child elements
+	
+	document.body.childNodes
+	get a list(NodeList) of children of body
+	use this to get lists
+
+
+	to get attributes:
+	document.body.childNodes[5].attributes[0]
+
+document.body instanceof Node // returns true
+
+   nodeObj.className return a class name in one string
+   or classList to get class names in an arrayh of strings
+
+
+   getAttributeNode('attr name') also returns a string of attr value;
+   must use on a specific node
+   document.body.childNodes[7].childNodes[1].getAttributeNode('class');
