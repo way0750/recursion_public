@@ -51,6 +51,18 @@ parse each item / property
 		and simple str.slice(1, str.length);
 
 
+parsing object:
+	if (/^\{.*\}$/.test(json)){
+	//it must be an object
+	comma means one set of k-v
+	: sets apart k-v
+	
+
+	}
+
+
+
+
 
 parsing array:
 
@@ -62,11 +74,12 @@ parsing array:
 	 start to hold from begin/after a comma
 	 end at comma or at the end of string
 
-	 then trim space front and end
-
-
 	when ended, then convert by calling parseJSON again to convert each item
 
 	return item then enter an [arr] and return it;
+
+
+
+
 
 
