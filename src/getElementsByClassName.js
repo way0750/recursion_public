@@ -16,13 +16,17 @@ var getElementsByClassName = function(className, nodes
   nodes = nodes || document.childNodes;
 
   return _.reduce(nodes, function(passedNodes, node){
-  	if (node.nodeType !== 1) { return passedNodes;}
-  	if (hasClassValueOf(node, className)) {passedNodes.push(node);}
-  	var children = node.childNodes;
-  	
-  	if (children.length){
-  		passedNodes = passedNodes.concat(getElementsByClassName(className, children));
-  	}
+
+  	if (node.nodeType === 1) {
+
+	  	if (hasClassValueOf(node, className)) {passedNodes.push(node);}
+	  	
+	  	var children = node.childNodes;
+	  	if (children.length){
+	  		passedNodes = passedNodes.concat(getElementsByClassName(className, children));
+	  	}
+    }
+
   	return passedNodes;
 
   }, []);
