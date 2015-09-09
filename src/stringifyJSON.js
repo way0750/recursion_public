@@ -19,15 +19,11 @@ var stringifyObj = function(value, isArr){
 
 
 var stringifyJSON = function(value){
-	debugger;
 	if (/object|string/.test(typeof value) !== true || value === null) {
 		return String(value);
 	} else if (typeof(value) === 'string'){
-		debugger;
 		return '"' + value + '"';
 	} else if (/Object|Array/.test(value.constructor.name)){
 		return Array.isArray(value) ? stringifyObj(value, true) : stringifyObj(value, false);
-	} else {
-		return '';
 	}
 };
