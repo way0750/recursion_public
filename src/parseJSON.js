@@ -4,14 +4,13 @@
 // but you're not, so you'll write it from scratch:
 // 
 
-var convertToArray = function(json, convertItem){
-	//trim off the bracket
+var convertToArray = function(json, shouldConvertItem){
+	//trim off the bracket, if empty string is left, this function will return empty array;
 	json = json.slice(1, json.length-1);
-
-	convertItem = arguments.length < 2 ? true : convertItem;
+	//to decide if each array item should be parsed
+	shouldConvertItem = arguments.length < 2 ? true : shouldConvertItem;
 
 	var arr = [], bracketQ = [], curValue = '', i, length, curChar;
-
 	for (i = 0, length=json.length; i < length; i++){
 		curChar = json[i];
 
@@ -37,7 +36,7 @@ var convertToArray = function(json, convertItem){
 			//but don't convert the stirng since it is a key value pair
 			//instead use convertToObject to find key-value in each sting
 			if (i === length-1) {curValue += (curChar);}
-			arr.push(convertItem ? parseJSON(curValue) : curValue);
+			arr.push(shouldConvertItem ? parseJSON(curValue) : curValue);
 			curValue = '';
 		} else {
 		//if no complete value yet, keep adding characters to the temporary
