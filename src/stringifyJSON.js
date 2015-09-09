@@ -8,8 +8,11 @@
 var stringifyObj = function(value, isArr){
 	var finalString, propString;
 	finalString = _.reduce(value, function(convertedValues, propValue, propName){
-		propString = isArr ? stringifyJSON(propValue) : propName + ":" + stringifyJSON(propValue);
-		return convertedValues.concat(propString);
+		if (propValue !== undefined && typeof propValue !== 'function') {
+			propString = isArr ? stringifyJSON(propValue) : stringifyJSON(propName) + ":" + stringifyJSON(propValue);
+			convertedValues = convertedValues.concat(propString);
+		}
+		return convertedValues;
 	}, []).join(',');
 	return isArr ? '[' + finalString + ']' : '{' + finalString + '}';
 };
@@ -17,11 +20,14 @@ var stringifyObj = function(value, isArr){
 
 var stringifyJSON = function(value){
 	debugger;
-	if (/object|string/.test(value) !== true || value === null) {
+	if (/object|string/.test(typeof value) !== true || value === null) {
 		return String(value);
 	} else if (typeof(value) === 'string'){
-		
+		debugger;
+		return '"' + value + '"';
 	} else if (/Object|Array/.test(value.constructor.name)){
 		return Array.isArray(value) ? stringifyObj(value, true) : stringifyObj(value, false);
+	} else {
+		return '';
 	}
 };
